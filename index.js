@@ -1,7 +1,11 @@
+const redux = require("redux"); // Imports the Redux library
+const createStore = redux.createStore; // Extracts the createStore function from Redux
+
 console.log("Learning From codevolution"); // Logs the string "Learning From codevolution" to the console
 
 const CAKE_ORDERED = "CAKE_ORDERED"; // Defines a constant variable CAKE_ORDERED with the value "CAKE_ORDERED"
 
+//d.define an action and action creaters
 // Action creating function
 function orderCake() {
   // Declares a function named orderCake
@@ -11,10 +15,13 @@ function orderCake() {
   };
 }
 
+//b.declare a initial state
+
 const initialState = {
   noOfCakes: 10, // Initializes the state with 'noOfCakes' property set to 10
 };
 
+//c. declare a reducer
 // Reducer---(previousState, action) => returns newState
 const reducer = (state = initialState, action) => {
   // Defines a reducer function that takes 'state' and 'action' as parameters
@@ -34,3 +41,42 @@ const reducer = (state = initialState, action) => {
       break; // Break statement (optional as 'return' exits the function)
   }
 };
+
+// REDUX STORE
+// ONE STORE FOR THE ENTIRE APPLICATION
+// RESPONSIBILITIES
+// 1. Responsible for holding application state
+// 2. Allows access to state via getState()
+// 3. Allows state to be updated via dispatch(action)
+// 4. Registers listeners via subscribe(listener)
+/*  What is a listener in redux store?
+In Redux, a listener is a function that gets called whenever the state of 
+the Redux store changes. Listeners are a key part of the Redux architecture 
+because they help to trigger re-renders or perform other side effects in response 
+to state changes. Here’s how they typically work: */
+
+// 5. Handles unregistering of listeners via the function returned by subscribe(listener)
+
+// a. create the store
+const store = createStore(reducer); // Creates a Redux store with the reducer
+console.log("Initial State", store.getState()); // Logs the initial state of the store
+
+//e. Subscribe to the store
+const unsubscribe = store.subscribe(
+  () => console.log("Updated state =", store.getState()) // Logs the updated state whenever it changes
+);
+
+// f.dispatch actions to update the store
+store.dispatch(orderCake()); // Dispatches an action to order a cake
+store.dispatch(orderCake()); // Dispatches another action to order a cake
+store.dispatch(orderCake()); // Dispatches yet another action to order a cake
+unsubscribe(); // Unsubscribes the listener //g.unsubscribe the changes
+
+//steps to follow in redux
+// a. create the store
+//b.declare a initial state
+//c. declare a reducer
+//d.define an action and action creaters
+//e. Subscribe to the store
+// f.dispatch actions to update the store
+//g.unsubscribe the changes
