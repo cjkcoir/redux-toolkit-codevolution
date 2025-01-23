@@ -5,13 +5,23 @@ console.log("Learning From codevolution"); // Logs the string "Learning From cod
 
 const CAKE_ORDERED = "CAKE_ORDERED"; // Defines a constant variable CAKE_ORDERED with the value "CAKE_ORDERED"
 
+const CAKE_RESTOCKED = "CAKE_RESTOCKED";
+
 //d.define an action and action creaters
 // Action creating function
 function orderCake() {
   // Declares a function named orderCake
   return {
     type: CAKE_ORDERED, // The return statement returns an object with a property 'type' set to the value of CAKE_ORDERED
-    quantity: 1, // The object also includes a property 'quantity' set to 1
+    payload: 1, // The object also includes a property 'quantity' set to 1
+  };
+}
+
+function restockCake(qty) {
+  // Declares a function named restockCake that takes qty as an argument
+  return {
+    type: CAKE_RESTOCKED, // The return statement returns an object with a property 'type' set to the value CAKE_RESTOCKED
+    payload: qty, // The object also includes a property 'payload' set to the value of qty passed as an argument
   };
 }
 
@@ -34,6 +44,12 @@ const reducer = (state = initialState, action) => {
         noOfCakes: state.noOfCakes - 1, // Decrement 'noOfCakes' by 1
       };
       break; // Break statement (optional as 'return' exits the function)
+
+    case CAKE_RESTOCKED:
+      return {
+        ...state,
+        noOfCakes: state.noOfCakes + action.payload,
+      };
 
     default:
       // Default case if action type doesn't match
@@ -70,6 +86,7 @@ const unsubscribe = store.subscribe(
 store.dispatch(orderCake()); // Dispatches an action to order a cake
 store.dispatch(orderCake()); // Dispatches another action to order a cake
 store.dispatch(orderCake()); // Dispatches yet another action to order a cake
+store.dispatch(restockCake(3));
 unsubscribe(); // Unsubscribes the listener //g.unsubscribe the changes
 
 //steps to follow in redux
