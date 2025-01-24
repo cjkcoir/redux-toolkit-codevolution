@@ -1,6 +1,7 @@
 const redux = require("redux"); // Imports the Redux library
 const createStore = redux.createStore; // Extracts the createStore function from Redux
 const bindActionCreators = redux.bindActionCreators; // Extracts the bindActionCreators function from Redux
+const combineReducers = redux.combineReducers; // Extracts the combineReducers function from Redux
 
 console.log("Learning From codevolution"); // Logs the string "Learning From codevolution" to the console
 
@@ -43,16 +44,19 @@ function restockIcecream(qty) {
   };
 }
 
-// b. Declare an initial state
-const initialState = {
-  noOfCakes: 10, // Initializes the state with 'noOfCakes' property set to 10
-  noOfIcecreams: 50, // Initializes the state with 'noOfIcecreams' property set to 50
+// b. Declare initial states
+const initialCakeState = {
+  noOfCakes: 20, // Initializes the state with 'noOfCakes' property set to 20
 };
 
-// c. Declare a reducer
+const initialIcecreamState = {
+  noOfIcecreams: 40, // Initializes the state with 'noOfIcecreams' property set to 40
+};
+
+// c. Declare reducers
 // Reducer---(previousState, action) => returns newState
-const reducer = (state = initialState, action) => {
-  // Defines a reducer function that takes 'state' and 'action' as parameters
+const cakeReducer = (state = initialCakeState, action) => {
+  // Defines a reducer function for cakes that takes 'state' and 'action' as parameters
   switch (action.type) {
     // Switches based on action type
     case CAKE_ORDERED:
@@ -69,6 +73,16 @@ const reducer = (state = initialState, action) => {
         noOfCakes: state.noOfCakes + action.payload, // Increment 'noOfCakes' by the value of action.payload
       };
 
+    default:
+      // Default case if action type doesn't match
+      return state; // Returns the existing state unchanged
+  }
+};
+
+const icecreamReducer = (state = initialIcecreamState, action) => {
+  // Defines a reducer function for ice creams that takes 'state' and 'action' as parameters
+  switch (action.type) {
+    // Switches based on action type
     case ICECREAM_ORDERED:
       // If action type is ICECREAM_ORDERED, return a new state object
       return {
@@ -104,8 +118,14 @@ to state changes. Here’s how they typically work: */
 
 // 5. Handles unregistering of listeners via the function returned by subscribe(listener)
 
+const rootReducer = combineReducers({
+  // Combines the cakeReducer and icecreamReducer into a single rootReducer
+  cake: cakeReducer,
+  icecream: icecreamReducer,
+});
+
 // a. Create the store
-const store = createStore(reducer); // Creates a Redux store with the reducer
+const store = createStore(rootReducer); // Creates a Redux store with the rootReducer
 console.log("Initial State", store.getState()); // Logs the initial state of the store
 
 // e. Subscribe to the store
@@ -115,7 +135,7 @@ const unsubscribe = store.subscribe(
 
 // Binding action creators to the store's dispatch function
 const actions = bindActionCreators(
-  { orderCake, restockCake, orderIcecream, restockIcecream },
+  { orderCake, restockCake, orderIcecream, restockIcecream }, // Binds the action creators to dispatch
   store.dispatch
 );
 
@@ -125,7 +145,7 @@ actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
-actions.restockCake(5); // Dispatches restockCake action with a quantity of 4
+actions.restockCake(5); // Dispatches restockCake action with a quantity of 5
 
 actions.orderIcecream(); // Dispatches orderIcecream action
 actions.orderIcecream(); // Dispatches orderIcecream action
