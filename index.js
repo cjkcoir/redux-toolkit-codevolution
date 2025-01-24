@@ -5,8 +5,9 @@ const bindActionCreators = redux.bindActionCreators; // Extracts the bindActionC
 console.log("Learning From codevolution"); // Logs the string "Learning From codevolution" to the console
 
 const CAKE_ORDERED = "CAKE_ORDERED"; // Defines a constant variable CAKE_ORDERED with the value "CAKE_ORDERED"
-
 const CAKE_RESTOCKED = "CAKE_RESTOCKED"; // Defines a constant variable CAKE_RESTOCKED with the value "CAKE_RESTOCKED"
+const ICECREAM_ORDERED = "ICECREAM_ORDERED"; // Defines a constant variable ICECREAM_ORDERED with the value "ICECREAM_ORDERED"
+const ICECREAM_RESTOCKED = "ICECREAM_RESTOCKED"; // Defines a constant variable ICECREAM_RESTOCKED with the value "ICECREAM_RESTOCKED"
 
 // d. Define an action and action creators
 // Action creating function
@@ -26,9 +27,26 @@ function restockCake(qty) {
   };
 }
 
+function orderIcecream(qty = 1) {
+  // Declares a function named orderIcecream that takes an optional argument qty with a default value of 1
+  return {
+    type: ICECREAM_ORDERED, // The return statement returns an object with a property 'type' set to the value of ICECREAM_ORDERED
+    payload: qty, // The object also includes a property 'payload' set to the value of qty
+  };
+}
+
+function restockIcecream(qty) {
+  // Declares a function named restockIcecream that takes qty as an argument
+  return {
+    type: ICECREAM_RESTOCKED, // The return statement returns an object with a property 'type' set to the value of ICECREAM_RESTOCKED
+    payload: qty, // The object also includes a property 'payload' set to the value of qty passed as an argument
+  };
+}
+
 // b. Declare an initial state
 const initialState = {
   noOfCakes: 10, // Initializes the state with 'noOfCakes' property set to 10
+  noOfIcecreams: 50, // Initializes the state with 'noOfIcecreams' property set to 50
 };
 
 // c. Declare a reducer
@@ -49,6 +67,20 @@ const reducer = (state = initialState, action) => {
       return {
         ...state, // Spread operator to copy existing state properties
         noOfCakes: state.noOfCakes + action.payload, // Increment 'noOfCakes' by the value of action.payload
+      };
+
+    case ICECREAM_ORDERED:
+      // If action type is ICECREAM_ORDERED, return a new state object
+      return {
+        ...state, // Spread operator to copy existing state properties
+        noOfIcecreams: state.noOfIcecreams - 1, // Decrement 'noOfIcecreams' by 1
+      };
+
+    case ICECREAM_RESTOCKED:
+      // If action type is ICECREAM_RESTOCKED, return a new state object
+      return {
+        ...state, // Spread operator to copy existing state properties
+        noOfIcecreams: state.noOfIcecreams + action.payload, // Increment 'noOfIcecreams' by the value of action.payload
       };
 
     default:
@@ -81,29 +113,23 @@ const unsubscribe = store.subscribe(
   () => console.log("Updated state =", store.getState()) // Logs the updated state whenever it changes
 );
 
-// f. Dispatch actions to update the store
-// store.dispatch(orderCake()); // Dispatches an action to order a cake
-// store.dispatch(orderCake()); // Dispatches another action to order a cake
-// store.dispatch(orderCake()); // Dispatches yet another action to order a cake
-// store.dispatch(restockCake(3)); // Dispatches an action to restock cakes with a quantity of 3
-// g. Unsubscribe the changes
-// unsubscribe(); // Unsubscribes the listener
-
-// Steps to follow in Redux
-// a. Create the store
-// b. Declare an initial state
-// c. Declare a reducer
-// d. Define an action and action creators
-// e. Subscribe to the store
-// f. Dispatch actions to update the store
-// g. Unsubscribe the changes
-
 // Binding action creators to the store's dispatch function
-const actions = bindActionCreators({ orderCake, restockCake }, store.dispatch);
+const actions = bindActionCreators(
+  { orderCake, restockCake, orderIcecream, restockIcecream },
+  store.dispatch
+);
+
+// f. Dispatch actions to update the store
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
 actions.orderCake(); // Dispatches orderCake action
-actions.restockCake(4); // Dispatches restockCake action with a quantity of 4
+actions.restockCake(5); // Dispatches restockCake action with a quantity of 4
+
+actions.orderIcecream(); // Dispatches orderIcecream action
+actions.orderIcecream(); // Dispatches orderIcecream action
+actions.orderIcecream(); // Dispatches orderIcecream action
+actions.restockIcecream(3); // Dispatches restockIcecream action with a quantity of 3
+
 unsubscribe(); // Unsubscribes the listener
