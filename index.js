@@ -2,6 +2,9 @@ const redux = require("redux"); // Imports the Redux library
 const createStore = redux.createStore; // Extracts the createStore function from Redux
 const bindActionCreators = redux.bindActionCreators; // Extracts the bindActionCreators function from Redux
 const combineReducers = redux.combineReducers; // Extracts the combineReducers function from Redux
+const reduxLogger = require("redux-logger");
+const logger = reduxLogger.createLogger();
+const applyMiddleware = redux.applyMiddleware;
 
 console.log("Learning From codevolution"); // Logs the string "Learning From codevolution" to the console
 
@@ -125,13 +128,11 @@ const rootReducer = combineReducers({
 });
 
 // a. Create the store
-const store = createStore(rootReducer); // Creates a Redux store with the rootReducer
+const store = createStore(rootReducer, applyMiddleware(logger)); // Creates a Redux store with the rootReducer
 console.log("Initial State", store.getState()); // Logs the initial state of the store
 
 // e. Subscribe to the store
-const unsubscribe = store.subscribe(
-  () => console.log("Updated state =", store.getState()) // Logs the updated state whenever it changes
-);
+const unsubscribe = store.subscribe(() => {});
 
 // Binding action creators to the store's dispatch function
 const actions = bindActionCreators(
